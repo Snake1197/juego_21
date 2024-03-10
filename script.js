@@ -6,8 +6,6 @@ let switchControl = "Menú";
 let switchControlLogin = "Principal";
 let cantidadFichas = 0;
 let cantidadFichasRestantes = "0";
-let reglas21 =
-  "Las reglas son simples, se entregará inicialmente una carta y podrás solicitar otra si lo deseas, el objetivo es obtener una suma menor o igual a 21.\n- Si acumulas 21, y la computadora también, gana la computadora.\n- Si te pasas de 21, gana la computadora.\n- Si sacas un número menor o igual a 21, pero mayor que la computadora, has ganado.\n- Si lo acumulado es menor a lo acumulado por la computadora, gana la computadora.";
 let mensajeMenuJuegos =
   "Escriba el número correspondiente a la opción de que desea: \n1. Nueva partida\n2. Revisar reglas.";
 
@@ -26,7 +24,7 @@ let anio = fechaHoraActual.getFullYear();
 let usuarios = [];
 let historial = [];
 
-while (salir === 0) {
+/* while (salir === 0) {
   switch (switchControlLogin) {
     case "Principal":
       if (sesionActiva === 0) {
@@ -137,7 +135,7 @@ while (salir === 0) {
       salir = 1;
       break;
   }
-}
+} */
 
 //Función para devolver un número ramdom, que recibe límite inferior y límite superior
 function getRamdomCarta(min, max) {
@@ -204,39 +202,6 @@ function getEdad() {
   return edadInput;
 }
 
-//Función para validar que el nick no exista
-function validarNickUnico() {
-  let nick = getNick();
-  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  while (existeNick) {
-    alert("Ya existe ese nick, ingrese uno diferente");
-    nick = getNick();
-    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  }
-  return nick;
-}
-
-//Función para obtener el nick
-function getNick() {
-  let nickInput = prompt("Ingrese su nick o alias");
-  while (!nickInput || nickInput.trim() === "") {
-    alert(
-      "El nick o alias no puede estar en blanco. Por favor, ingrese un nick válido."
-    );
-    nickInput = prompt("Ingrese su nick o alias:");
-  }
-  return nickInput;
-}
-
-// Función para generar un nuevo idUsuario autoincremental
-function generarIdUsuario() {
-  if (usuarios.length === 0) {
-    return 1;
-  } else {
-    return usuarios[usuarios.length - 1].idUsuario + 1;
-  }
-}
-
 //Función para validar que ingrese una opción válida en Login
 function getOptionLogin() {
   let optionInput = 0;
@@ -259,7 +224,7 @@ function getOptionLogin() {
   return optionInput;
 }
 
-//Función para obtener el nick
+//Función para obtener el nombre
 function getnombre() {
   let nombreInput = prompt("Ingrese su nombre");
   while (!nombreInput || nombreInput.trim() === "") {
@@ -271,7 +236,7 @@ function getnombre() {
   return nombreInput;
 }
 
-//Función para obtener el nick
+//Función para obtener el apellido
 function getApellido() {
   let apellidoInput = prompt("Ingrese su apellido");
   while (!apellidoInput || apellidoInput.trim() === "") {
@@ -281,18 +246,6 @@ function getApellido() {
     apellidoInput = prompt("Ingrese su apellido:");
   }
   return apellidoInput;
-}
-
-//Función para obtener contraseña
-function getPassword() {
-  let passwordInput = prompt("Ingrese su contraseña");
-  while (!passwordInput || passwordInput.trim() === "") {
-    alert(
-      "La contraseña no puede estar en blanco. Por favor, ingrese una contraseña válida."
-    );
-    passwordInput = prompt("Ingrese su contraseña");
-  }
-  return passwordInput;
 }
 
 //Función para registrar nuevo usuario
@@ -314,37 +267,6 @@ function registrarUsuario() {
   usuarios.push(nuevoUsuario);
   alert("Registro exitoso. Vuelve al menú principal para que inicies sesión.");
   switchControlLogin = "Principal";
-}
-
-//Función para validar nick en inicio de sesión
-function validarNickExiste() {
-  let nick = getNick();
-  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  while (!existeNick) {
-    alert("El nick ingresado no existe o es incorrecto. Vuelva a intentar");
-    nick = getNick();
-    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  }
-  return nick;
-}
-//Función para validar password en inicio de sesión
-
-//Función para inicio de sesión
-function validarContraseña() {
-  let password = getPassword();
-  let existePassword = usuarios.find(
-    (nuevoUsuario) =>
-      (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
-  );
-  while (!existePassword) {
-    alert("El nick ingresado no existe o es incorrecto. Vuelva a intentar");
-    password = getPassword();
-    existePassword = usuarios.find(
-      (nuevoUsuario) =>
-        (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
-    );
-  }
-  return password;
 }
 
 //Función para devolver el idUsuario en sesión
@@ -374,3 +296,313 @@ function guardarHistorial() {
 
   historial.push(historialUsuario);
 }
+
+/* const suits = ["♠", "♡", "♢", "♣"];
+const ranks = [
+  "A",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+];
+
+const container = document.body;
+
+for (const suit of suits) {
+  for (const rank of ranks) {
+    const card = document.createElement("div");
+    card.classList.add("card", "spades");
+    card.innerHTML = `<div class="card-content">${rank} ${suit}</div>`;
+    container.appendChild(card);
+  }
+} */
+
+/* let buttonLogin = document.getElementById("buttonLogin");
+buttonLogin.addEventListener("click", () => validarContraseña(user, password));
+ */
+//Función para inicio de sesión
+function validarContraseña() {
+  let password = getPassword();
+  let existePassword = usuarios.find(
+    (nuevoUsuario) =>
+      (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
+  );
+  while (!existePassword) {
+    alert(
+      "El la contraseña ingresada no existe o es incorrecto. Vuelva a intentar"
+    );
+    password = getPassword();
+    existePassword = usuarios.find(
+      (nuevoUsuario) =>
+        (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
+    );
+  }
+  return password;
+}
+
+//Función para obtener contraseña
+function getPassword() {
+  let passwordInput = prompt("Ingrese su contraseña");
+  while (!passwordInput || passwordInput.trim() === "") {
+    alert(
+      "La contraseña no puede estar en blanco. Por favor, ingrese una contraseña válida."
+    );
+    passwordInput = prompt("Ingrese su contraseña");
+  }
+  return passwordInput;
+}
+
+//Función para validar nick en inicio de sesión
+function validarNickExiste() {
+  let nick = getNick();
+  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
+  while (!existeNick) {
+    alert("El nick ingresado no existe o es incorrecto. Vuelva a intentar");
+    nick = getNick();
+    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
+  }
+  return nick;
+}
+
+//Función para validar que el nick no exista
+function validarNickUnico() {
+  let nick = getNick();
+  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
+  while (existeNick) {
+    alert("Ya existe ese nick, ingrese uno diferente");
+    nick = getNick();
+    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
+  }
+  return nick;
+}
+
+//Función para obtener el nick
+function getNick() {
+  let nickInput = prompt("Ingrese su nick o alias");
+  while (!nickInput || nickInput.trim() === "") {
+    alert(
+      "El nick o alias no puede estar en blanco. Por favor, ingrese un nick válido."
+    );
+    nickInput = prompt("Ingrese su nick o alias:");
+  }
+  return nickInput;
+}
+
+function verificarCamposLlenos() {
+  var inputs = document.querySelectorAll(
+    '#formLogin input[type="text"],#formLogin input[type="password"]'
+  );
+  var todosLlenos = true;
+  inputs.forEach(function (input) {
+    var errorMessage = input.nextElementSibling;
+    if (input.value === "") {
+      errorMessage.style.display = "block";
+      todosLlenos = false;
+    } else {
+      errorMessage.style.display = "none";
+    }
+  });
+  return todosLlenos;
+}
+
+// Función para validar el usuario y la contraseña
+function validarUsuarioYContraseña(usuario, contraseña) {
+  for (let i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].nick === usuario && usuarios[i].password === contraseña) {
+      return true; // Usuario y contraseña válidos
+    }
+  }
+  return false; // Usuario y contraseña inválidos
+}
+
+// Función que se ejecuta cuando se intenta enviar el formulario
+function onSubmitFormLogin(event) {
+  event.preventDefault();
+  if (!verificarCamposLlenos()) {
+    return; // Detener la ejecución si los campos están vacíos
+  } else {
+    let usuario = document.getElementById("userLogin").value;
+    let contraseña = document.getElementById("passwordLogin").value;
+    localStorage.removeItem("usuario");
+
+    // Validar el usuario y la contraseña
+    if (validarUsuarioYContraseña(usuario, contraseña)) {
+      // Acción en caso de usuario y contraseña válidos
+      document.getElementById("pageInicial").style.display = "none";
+      document.getElementById("pageStartGame").style.display = "flex";
+      localStorage.setItem("usuario", usuario);
+      document.getElementById("welcomeUser").textContent =
+        "¡Bienvenido a Blackjack, " + usuario + "!";
+      // Aquí podrías redirigir a otra página o realizar otras acciones
+    } else {
+      // Acción en caso de usuario y contraseña inválidos
+      messageLoginError.style.display = "block";
+      document.getElementById("formLogin").reset();
+    }
+  }
+}
+// Agregar el evento submit al formulario
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("formSignin")
+    .addEventListener("submit", onSubmitFormSignin);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Asociar la función onSubmitForm al evento submit del formulario
+  document
+    .getElementById("formLogin")
+    .addEventListener("submit", onSubmitFormLogin);
+});
+
+/* Registro de usuario */
+// Función para generar un nuevo idUsuario autoincremental
+function generarIdUsuario() {
+  if (usuarios.length === 0) {
+    return 1;
+  } else {
+    return usuarios[usuarios.length - 1].idUsuario + 1;
+  }
+}
+
+// Función para validar si un campo de texto contiene solo letras
+function validarTexto(texto) {
+  return /^[a-zA-Z]+$/.test(texto.trim());
+}
+
+// Función para validar todos los campos del formulario
+function validarCampos() {
+  let nombre = document.getElementById("name").value.trim();
+  let apellido = document.getElementById("surname").value.trim();
+  let usuario = document.getElementById("user").value.trim();
+  let password = document.getElementById("password").value.trim();
+  let errores = [];
+
+  if (!nombre) {
+    document.getElementById("nameEmpty").style.display = "block";
+    document.getElementById("nameInvalid").style.display = "none";
+    errores.push("El campo de nombre no puede estar vacío.");
+  } else if (!validarTexto(nombre)) {
+    document.getElementById("nameInvalid").style.display = "block";
+    document.getElementById("nameEmpty").style.display = "none";
+  } else {
+    document.getElementById("nameEmpty").style.display = "none";
+    document.getElementById("nameInvalid").style.display = "none";
+  }
+
+  if (!apellido) {
+    document.getElementById("surnameEmpty").style.display = "block";
+    document.getElementById("nameInvalid").style.display = "none";
+    errores.push("El campo de apellido no puede estar vacío.");
+  } else if (!validarTexto(apellido)) {
+    document.getElementById("surnameInvalid").style.display = "block";
+    document.getElementById("surnameEmpty").style.display = "none";
+    errores.push("El campo de apellido solo puede contener letras.");
+  } else {
+    document.getElementById("surnameEmpty").style.display = "none";
+    document.getElementById("surnameInvalid").style.display = "none";
+  }
+
+  if (!usuario) {
+    document.getElementById("userEmpty").style.display = "block";
+    errores.push("El campo de usuario no puede estar vacío.");
+  } else {
+    document.getElementById("userEmpty").style.display = "none";
+  }
+
+  if (!password) {
+    document.getElementById("passwordEmpty").style.display = "block";
+    errores.push("El campo de contraseña no puede estar vacío.");
+  } else {
+    document.getElementById("passwordEmpty").style.display = "none";
+  }
+
+  return errores.length;
+}
+
+// Función para manejar el envío del formulario
+function onSubmitFormSignin(event) {
+  event.preventDefault();
+  let nombre = document.getElementById("name").value.trim();
+  let apellido = document.getElementById("surname").value.trim();
+  let usuario = document.getElementById("user").value.trim();
+  let password = document.getElementById("password").value.trim();
+  let nickExistente = usuarios.find(function (user) {
+    return user.nick === usuario;
+  });
+  if (validarCampos() > 0) {
+    return;
+  } else if (nickExistente) {
+    document.getElementById("userNoUnique").style.display = "block";
+    return;
+  } else {
+    let nuevoUsuario = {
+      idUsuario: generarIdUsuario(),
+      nombre: nombre,
+      apellido: apellido,
+      nick: usuario,
+      password: password,
+    };
+
+    usuarios.push(nuevoUsuario);
+
+    // Limpiar el formulario después del registro
+
+    document.getElementById("messageSiginSuccess").style.display = "block";
+    document.getElementById("formSignin").reset();
+    document.getElementById("userNoUnique").style.display = "none";
+    localStorage.removeItem("usuario");
+  }
+
+  // Validar si el nick ya está en uso
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Obtener el enlace por su ID
+  let enlace = document.getElementById("optionSignin");
+
+  enlace.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    document.getElementById("cardSignin").style.display = "flex";
+    document.getElementById("cardLogin").style.display = "none";
+    document.getElementById("formSignin").reset();
+    messageLoginError.style.display = "none";
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Obtener el enlace por su ID
+  let enlace = document.getElementById("optionLogin");
+
+  enlace.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    document.getElementById("cardSignin").style.display = "none";
+    document.getElementById("cardLogin").style.display = "flex";
+    document.getElementById("formSignin").reset();
+    messageSiginSuccess.style.display = "none";
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Agregar un listener de eventos al botón
+  let enlace = document.getElementById("logout");
+
+  enlace.addEventListener("click", function (event) {
+    event.preventDefault();
+    // Limpiar el almacenamiento local
+    localStorage.removeItem("usuario");
+    document.getElementById("pageInicial").style.display = "flex";
+    document.getElementById("pageStartGame").style.display = "none";
+    document.getElementById("formLogin").reset();
+  });
+});
