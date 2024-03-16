@@ -1,13 +1,9 @@
 let totalJugador = 0;
 let totalComputadora = 0;
 let cartaRecibida = 0;
-let controlOtraCarta = "si";
-let switchControl = "Menú";
-let switchControlLogin = "Principal";
+let controlOtraCarta = true;
 let cantidadFichas = 0;
 let cantidadFichasRestantes = "0";
-let mensajeMenuJuegos =
-  "Escriba el número correspondiente a la opción de que desea: \n1. Nueva partida\n2. Revisar reglas.";
 
 let sesionActiva = 0;
 let nickSesion = "";
@@ -23,119 +19,62 @@ let anio = fechaHoraActual.getFullYear();
 
 let usuarios = [];
 let historial = [];
+let cartasSeleccionadas = [];
 
-/* while (salir === 0) {
-  switch (switchControlLogin) {
-    case "Principal":
-      if (sesionActiva === 0) {
-        let option = getOptionLogin();
-        if (option === 1) {
-          nickSesion = validarNickExiste();
-          passwordSesion = validarContraseña();
-          idUsuarioSesion = getIdUsuario();
-          sesionActiva = 1;
-          switchControlLogin = "Sesion";
-        } else if (option === 2) {
-          registrarUsuario();
-        } else if (option === 3) {
-          alert(
-            "A continuación ingrese el nick o alias del que desea revisar el historial de partidas"
-          );
-          let nickBuscar = getNick();
-          let historialUsuario = historial
-            .filter(function (item) {
-              return item.nick === nickBuscar;
-            })
-            .map(function (item) {
-              return `Fecha: ${item.fecha} | Jugador: ${item.puntajeJugador} | Computadora: ${item.puntajeComputadora} | Resultado: ${item.resultadoPartida}`;
-            })
-            .join("\n");
-          alert(
-            "Historial de partidas para " +
-              nickSesion +
-              "\n\n" +
-              historialUsuario
-          );
-        } else if (option === 4) {
-          switchControlLogin = "Salir";
-        }
-      }
-      break;
-    case "Sesion":
-      alert("¡Bienvenido " + nickSesion + "!");
-      while (sesionActiva == 1) {
-        cantidadFichas = getCantidadFichas();
-        cantidadFichasRestantes = cantidadFichas;
-        for (let i = 0; i < cantidadFichas; i++) {
-          totalJugador = 0;
-          totalComputadora = 0;
-          switch (switchControl) {
-            case "Menú":
-              switchControl = prompt(
-                mensajeMenuJuegos +
-                  "\n\nFichas restantes: " +
-                  cantidadFichasRestantes
-              );
-              i = i - 1;
-              break;
-            case "1":
-              cantidadFichasRestantes = cantidadFichasRestantes - 1;
-              controlOtraCarta = "si";
-              do {
-                cartaRecibida = getRamdomCarta(1, 14);
-                totalJugador = totalJugador + cartaRecibida;
-                controlOtraCarta = getRespuestaOtraCarta();
-              } while (controlOtraCarta == "si" || controlOtraCarta == "sí");
+let usuarioAdmin = {
+  idUsuario: 0,
+  nombre: "Leandro",
+  apellido: "Guerrero",
+  nick: "Snake",
+  password: "123",
+};
 
-              totalComputadora = getRamdomCarta(15, 22);
-              alert("La computadora tiene " + totalComputadora);
+usuarios.push(usuarioAdmin);
 
-              if (totalJugador > totalComputadora && totalJugador <= 21) {
-                alert("Venciste a la computadora, ¡felicidades! 🎉");
-                resultadoPartidaUsuario = "Victoria";
-                switchControl = "Menú";
-              } else if (totalJugador >= 22) {
-                alert("Perdiste versus la computadora, te pasaste de 21 😭");
-                resultadoPartidaUsuario = "Derrota";
-                switchControl = "Menú";
-              } else if (totalJugador <= totalComputadora) {
-                alert("Perdiste versus la computadora, lo siento 🥺");
-                resultadoPartidaUsuario = "Derrota";
-                switchControl = "Menú";
-              } else {
-                alert("Escenario no contemplado.");
-              }
-              guardarHistorial();
-              break;
-            case "2":
-              alert(reglas21);
-              i = i - 1;
-              switchControl = "Menú";
-              break;
-            default:
-              alert(
-                "Valor ingresado no válido, debe ingresar un número de las opciones disponibles usuario mono."
-              );
-              i = i - 1;
-              switchControl = "Menú";
-              break;
-          }
-        }
-        if (cantidadFichasRestantes === 0) {
-          alert(
-            "Se han agotado la cantidad de fichas, vuelva a iniciar sesión para conseguir más fichas!"
-          );
-          switchControlLogin = "Principal";
-          sesionActiva = 0;
-        }
-      }
-      break;
-    default:
-      alert("¡Gracias por jugar 21! Esperamos vuelva pronto");
-      salir = 1;
-      break;
+const cartas = [];
+
+const palos = ["Corazones", "Diamantes", "Tréboles", "Picas"];
+const valores = [
+  "As",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+];
+const valoresNumerico = {
+  As: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  10: 10,
+  J: 11,
+  Q: 12,
+  K: 13,
+};
+
+// Crear las 52 cartas
+for (let palo of palos) {
+  for (let valor of valores) {
+    cartas.push({
+      palo: palo,
+      valor: valor,
+      valorNumerico: valoresNumerico[valor],
+    });
   }
-} */
+}
 
 //Función para devolver un número ramdom, que recibe límite inferior y límite superior
 function getRamdomCarta(min, max) {
@@ -163,122 +102,6 @@ function getCantidadFichas() {
   return cantidadFichasInput;
 }
 
-//Función para validar que solo ingrese "Sí" o "No"
-function getRespuestaOtraCarta() {
-  let controlOtraCartaInput = "";
-  while (controlOtraCartaInput == "") {
-    controlOtraCartaInput = prompt(
-      "Te salió " +
-        cartaRecibida +
-        " llevas acumulado " +
-        totalJugador +
-        ", ¿deseas otra carta? (Sí/No)"
-    ).toLowerCase();
-    if (
-      controlOtraCartaInput != "si" &&
-      controlOtraCartaInput != "no" &&
-      controlOtraCartaInput != "sí"
-    ) {
-      alert("Usuario mono, valor ingresado no válido");
-      controlOtraCartaInput = "";
-    }
-  }
-  return controlOtraCartaInput;
-}
-
-//Función para obtener un valor válido para edad
-function getEdad() {
-  let edadInput = 0;
-  while (edadInput === 0 || isNaN(edadInput)) {
-    edadInput = Number(prompt("Ingrese su edad, solo números enteros."));
-    if (isNaN(edadInput)) {
-      alert("Usuario mono, solo números enteros");
-      edadInput = 0;
-    } else if (edadInput <= 0) {
-      alert("Usuario mono, cantidad no válida");
-      edadInput = 0;
-    }
-  }
-  return edadInput;
-}
-
-//Función para validar que ingrese una opción válida en Login
-function getOptionLogin() {
-  let optionInput = 0;
-  while (optionInput === 0 || isNaN(optionInput)) {
-    optionInput = Number(
-      prompt(
-        "¡Bienvenido a 21!\n\nPor favor inicie sesión o regístrese para poder jugar:\n1. Iniciar sesión\n2. Registrarse\n3. Historial de partidas\n\n\n4. Salir"
-      )
-    );
-    if (
-      optionInput != "1" &&
-      optionInput != "2" &&
-      optionInput != "3" &&
-      optionInput != "4"
-    ) {
-      alert("Usuario mono, entrada no válida");
-      optionInput = 0;
-    }
-  }
-  return optionInput;
-}
-
-//Función para obtener el nombre
-function getnombre() {
-  let nombreInput = prompt("Ingrese su nombre");
-  while (!nombreInput || nombreInput.trim() === "") {
-    alert(
-      "El nombre no puede estar en blanco. Por favor, ingrese un nombre válido."
-    );
-    nombreInput = prompt("Ingrese su nombre:");
-  }
-  return nombreInput;
-}
-
-//Función para obtener el apellido
-function getApellido() {
-  let apellidoInput = prompt("Ingrese su apellido");
-  while (!apellidoInput || apellidoInput.trim() === "") {
-    alert(
-      "El apellido no puede estar en blanco. Por favor, ingrese un apellido válido."
-    );
-    apellidoInput = prompt("Ingrese su apellido:");
-  }
-  return apellidoInput;
-}
-
-//Función para registrar nuevo usuario
-function registrarUsuario() {
-  let nombre = getnombre();
-  let apellido = getApellido();
-  let edad = getEdad();
-  let nick = validarNickUnico();
-  let password = getPassword();
-  let nuevoUsuario = {
-    idUsuario: generarIdUsuario(),
-    nombre: nombre,
-    apellido: apellido,
-    edad: edad,
-    nick: nick,
-    password: password,
-  };
-
-  usuarios.push(nuevoUsuario);
-  alert("Registro exitoso. Vuelve al menú principal para que inicies sesión.");
-  switchControlLogin = "Principal";
-}
-
-//Función para devolver el idUsuario en sesión
-function getIdUsuario() {
-  let idUsuarioSesion = usuarios.find(
-    (nuevoUsuario) =>
-      (nuevoUsuario.nick =
-        nickSesion && nuevoUsuario.password === passwordSesion)
-  );
-  return idUsuarioSesion;
-}
-
 //Función para guardar historial de un usuario
 function guardarHistorial() {
   let nick = nickSesion;
@@ -297,105 +120,7 @@ function guardarHistorial() {
   historial.push(historialUsuario);
 }
 
-/* const suits = ["♠", "♡", "♢", "♣"];
-const ranks = [
-  "A",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "J",
-  "Q",
-  "K",
-];
-
-const container = document.body;
-
-for (const suit of suits) {
-  for (const rank of ranks) {
-    const card = document.createElement("div");
-    card.classList.add("card", "spades");
-    card.innerHTML = `<div class="card-content">${rank} ${suit}</div>`;
-    container.appendChild(card);
-  }
-} */
-
-/* let buttonLogin = document.getElementById("buttonLogin");
-buttonLogin.addEventListener("click", () => validarContraseña(user, password));
- */
-//Función para inicio de sesión
-function validarContraseña() {
-  let password = getPassword();
-  let existePassword = usuarios.find(
-    (nuevoUsuario) =>
-      (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
-  );
-  while (!existePassword) {
-    alert(
-      "El la contraseña ingresada no existe o es incorrecto. Vuelva a intentar"
-    );
-    password = getPassword();
-    existePassword = usuarios.find(
-      (nuevoUsuario) =>
-        (nuevoUsuario.nick = nickSesion && nuevoUsuario.password === password)
-    );
-  }
-  return password;
-}
-
-//Función para obtener contraseña
-function getPassword() {
-  let passwordInput = prompt("Ingrese su contraseña");
-  while (!passwordInput || passwordInput.trim() === "") {
-    alert(
-      "La contraseña no puede estar en blanco. Por favor, ingrese una contraseña válida."
-    );
-    passwordInput = prompt("Ingrese su contraseña");
-  }
-  return passwordInput;
-}
-
-//Función para validar nick en inicio de sesión
-function validarNickExiste() {
-  let nick = getNick();
-  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  while (!existeNick) {
-    alert("El nick ingresado no existe o es incorrecto. Vuelva a intentar");
-    nick = getNick();
-    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  }
-  return nick;
-}
-
-//Función para validar que el nick no exista
-function validarNickUnico() {
-  let nick = getNick();
-  let existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  while (existeNick) {
-    alert("Ya existe ese nick, ingrese uno diferente");
-    nick = getNick();
-    existeNick = usuarios.find((nuevoUsuario) => nuevoUsuario.nick === nick);
-  }
-  return nick;
-}
-
-//Función para obtener el nick
-function getNick() {
-  let nickInput = prompt("Ingrese su nick o alias");
-  while (!nickInput || nickInput.trim() === "") {
-    alert(
-      "El nick o alias no puede estar en blanco. Por favor, ingrese un nick válido."
-    );
-    nickInput = prompt("Ingrese su nick o alias:");
-  }
-  return nickInput;
-}
-
+/* Verificar campos llenos */
 function verificarCamposLlenos() {
   var inputs = document.querySelectorAll(
     '#formLogin input[type="text"],#formLogin input[type="password"]'
@@ -413,14 +138,14 @@ function verificarCamposLlenos() {
   return todosLlenos;
 }
 
-// Función para validar el usuario y la contraseña
+// Función para validar el inicio de sesión
 function validarUsuarioYContraseña(usuario, contraseña) {
   for (let i = 0; i < usuarios.length; i++) {
     if (usuarios[i].nick === usuario && usuarios[i].password === contraseña) {
-      return true; // Usuario y contraseña válidos
+      return true;
     }
   }
-  return false; // Usuario y contraseña inválidos
+  return false;
 }
 
 // Función que se ejecuta cuando se intenta enviar el formulario
@@ -435,13 +160,11 @@ function onSubmitFormLogin(event) {
 
     // Validar el usuario y la contraseña
     if (validarUsuarioYContraseña(usuario, contraseña)) {
-      // Acción en caso de usuario y contraseña válidos
       document.getElementById("pageInicial").style.display = "none";
       document.getElementById("pageStartGame").style.display = "flex";
       localStorage.setItem("usuario", usuario);
       document.getElementById("welcomeUser").textContent =
         "¡Bienvenido a Blackjack, " + usuario + "!";
-      // Aquí podrías redirigir a otra página o realizar otras acciones
     } else {
       // Acción en caso de usuario y contraseña inválidos
       messageLoginError.style.display = "block";
@@ -606,3 +329,165 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("formLogin").reset();
   });
 });
+
+/* Ingreso de fichas */
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("getFichas").addEventListener("click", function () {
+    let getFichaInput = document.getElementById("fichasMount").value;
+    let mensajeError = document.getElementById("fichasInvalid");
+    let mountFichasValid = /^[1-9]\d*$/.test(getFichaInput);
+
+    if (mountFichasValid) {
+      // Si el número es válido, guardamos el valor en una variable
+      cantidadFichas = parseInt(getFichaInput);
+      mensajeError.style.display = "none";
+      document.getElementById("fichasMenu").style.display = "none";
+      document.getElementById("levelMenu").style.display = "flex";
+      renderDealers();
+    } else {
+      // Si el número no es válido, mostramos el mensaje de error
+      mensajeError.style.display = "block";
+    }
+  });
+});
+
+function getDealers() {
+  return [
+    {
+      id: 1,
+      nombre: "Juan García",
+      level: "Amateur",
+      wins: 2,
+      defeats: 20,
+      rutaImagen: "dealer_1.jpg",
+    },
+    {
+      id: 2,
+      nombre: "Constantino Hernandez",
+      level: "Veterano",
+      wins: 35,
+      defeats: 18,
+      rutaImagen: "dealer_2.jpg",
+    },
+    {
+      id: 3,
+      nombre: "Lucinda Reyes",
+      level: "Avanzado",
+      wins: 60,
+      defeats: 12,
+      rutaImagen: "dealer_3.jpg",
+    },
+  ];
+}
+
+let dealers = getDealers();
+
+function renderDealers() {
+  let contenedor = document.getElementById("containerCardDealers");
+  contenedor.innerHTML = "";
+  dealers.forEach(({ id, nombre, level, wins, defeats, rutaImagen }) => {
+    let cardDealer = document.createElement("div");
+    cardDealer.className = "card-dealer";
+    cardDealer.id = `${id}`;
+
+    cardDealer.innerHTML = `
+  <span class="levelGame">${level}</span>
+  <div class="imgDealer"></div>
+  <h3>${nombre}</h3>
+  <div class="infoDealerStats">
+    <span><b>Victorias: </b>${wins}</span>
+    <span><b>Derrotas: </b>${defeats}</span>
+  </div>
+`;
+    cardDealer.querySelector(
+      ".imgDealer"
+    ).style.backgroundImage = `url(./img/dealers/${rutaImagen})`;
+    contenedor.append(cardDealer);
+  });
+  let opciones = document.querySelectorAll(".card-dealer");
+  let guardarBoton = document.getElementById("getLevel");
+  let idSeleccionado = null;
+
+  opciones.forEach(function (opcion) {
+    opcion.addEventListener("click", function () {
+      // Eliminar la clase 'selected' de todas las opciones
+      opciones.forEach(function (opcion) {
+        opcion.classList.remove("card-dealer-selected");
+      });
+
+      // Agregar la clase 'selected' a la opción seleccionada
+      this.classList.add("card-dealer-selected");
+      // Guardar el ID de la opción seleccionada
+      idSeleccionado = this.id;
+    });
+  });
+  guardarBoton.addEventListener("click", function () {
+    if (idSeleccionado) {
+      if (cantidadFichas == 0) {
+        alert("Te has quedado sin fichas");
+      }
+      document.getElementById("levelEmpty").style.display = "none";
+      document.getElementById("fichasMenu").style.display = "none";
+      document.getElementById("levelMenu").style.display = "none";
+      document.getElementById("tableGame").style.display = "flex";
+      cantidadFichas--;
+      playGame(idSeleccionado);
+      document
+        .getElementById("getCarta")
+        .addEventListener("click", getAnotherCard);
+    } else {
+      document.getElementById("levelEmpty").style.display = "block";
+    }
+  });
+}
+
+let levelDificult;
+
+function playGame(levelGame) {
+  if (levelGame == 1) {
+    totalComputadora = getRamdomCarta(1, 22);
+  } else if (levelGame == 2) {
+    totalComputadora = getRamdomCarta(10, 22);
+  } else if (levelGame == 3) {
+    totalComputadora = getRamdomCarta(17, 22);
+  }
+  totalJugador = +seleccionarCarta();
+}
+function seleccionarCarta() {
+  let indiceAleatorio = Math.floor(Math.random() * cartas.length);
+  let cartaSeleccionada = cartas.splice(indiceAleatorio, 1)[0];
+  let valorCarta = cartaSeleccionada.valorNumerico;
+  cartasSeleccionadas.push(cartaSeleccionada);
+  // Retornar el valor de la carta seleccionada
+  renderCards(cartasSeleccionadas);
+  return valorCarta;
+}
+
+function renderCards(cartasSeleccionadas) {
+  let contenedor = document.getElementById("containerCards");
+  contenedor.innerHTML = "";
+  cartasSeleccionadas.forEach(({ palo, valor }) => {
+    let card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+    <div class="card-header">
+      ${valor}
+    </div>
+    <div class="card-body">
+      <p>${palo}</p>
+    </div>
+    <div class="card-footer">
+      ${valor}
+    </div>
+`;
+    contenedor.appendChild(card);
+  });
+}
+
+function getAnotherCard() {
+  totalJugador += seleccionarCarta();
+  console.log(totalJugador);
+  if (totalJugador >= 22) {
+    alert("Perdiste");
+  }
+}

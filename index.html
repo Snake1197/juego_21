@@ -92,7 +92,7 @@
          <span>Blackjack</span>
          <button id="logout">Cerrar sesión</button>
       </div>
-      <div class="container-menu">
+      <div class="container-menu" id="fichasMenu">
          <h1 id="welcomeUser"></h1>
          <div class="container-instructions">
             <p>Las reglas son simples, se entregará inicialmente una carta y podrás solicitar otra si lo deseas, el
@@ -105,18 +105,41 @@
                <li>Si sacas un número menor o igual a 21, pero mayor que la computadora, has ganado.</li>
                <li>Si lo
                   acumulado es menor a lo acumulado por la computadora, gana la computadora.</li>
-               <li></li>
             </ul>
          </div>
          <div class="inputFichas">
-            <label for="fichas">Ingrese el número de fichas (Cada ficha equivale a un juego)</label>
-            <input type="number" id="fichas">
+            <label for="fichas"><b>Ingrese el número de fichas (Cada ficha equivale a un juego)</b></label>
+            <input type="number" id="fichasMount">
+            <span class="error-message" id="fichasInvalid">Solo se aceptan números enteros positivos.</span>
+
          </div>
-         <button class="startGame">Empezar a jugar</button>
-         <a href="">Visualizar historial</a>
+         <button class="startGame" id="getFichas">Iniciar partida</button>
+         <a href="" id="getFichas">Visualizar historial</a>
+      </div>
+      <div class="container-menu" id="levelMenu">
+         <h1 id="welcomeUser">Elija un nivel de dificultad</h1>
+         <span>Fichas restantes: </span>
+         <div class="container-dealers" id="containerCardDealers">
+         </div>
+         <div class="container-button-level">
+            <button class="startGame" id="getLevel">Jugar</button>
+            <span class="error-message" id="levelEmpty">Debe elegir un nivel de dificultad para continuar.</span>
+         </div>
+         <a href="">Volver al menú principal</a>
+      </div>
+      <div class="container-game" id="tableGame">
+         <div class="tableCards">
+            <div class="container-cards" id="containerCards">
+            </div>
+            <div class="groupButton">
+               <button id="getCarta">Otra carta</button>
+               <button>Stop</button>
+            </div>
+
+         </div>
+
       </div>
    </div>
-   <div></div>
 </body>
 
 </html>
