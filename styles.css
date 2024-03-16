@@ -386,6 +386,8 @@
   justify-content: center;
   gap: 40px;
 }
+
+.container-game > .tableCards > button,
 .groupButton button:nth-child(1) {
   width: 40%;
   max-width: 150px;
@@ -412,7 +414,7 @@
   font-weight: 600;
   font-size: 14px;
 }
-
+.container-game > .tableCards > button:hover,
 .groupButton button:nth-child(1):hover {
   background-color: #e44a4a;
   cursor: pointer;
@@ -426,6 +428,7 @@
 #messageMore21,
 #messageLostVsDealer,
 #messageWin,
-#buttonGameAgain {
+#buttonGameAgain,
+#messageFichasEmpty {
   display: none;
 }
