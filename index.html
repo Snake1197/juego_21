@@ -118,7 +118,7 @@
       </div>
       <div class="container-menu" id="levelMenu">
          <h1 id="welcomeUser">Elija un nivel de dificultad</h1>
-         <span>Fichas restantes: </span>
+         <span><b>Fichas restantes: </b><span id="fichasRest"></span></span>
          <div class="container-dealers" id="containerCardDealers">
          </div>
          <div class="container-button-level">
@@ -129,13 +129,17 @@
       </div>
       <div class="container-game" id="tableGame">
          <div class="tableCards">
+            <h3 id="messageMore21">¡Perdiste! Te pasaste de 21</h3>
+            <h3 id="messageLostVsDealer">¡Perdiste! Tienes menor o igual puntaje que el Dealer</h3>
+            <h3 id="messageWin">¡Ganaste! Venciste al dealer, felicidades</h3>
+            <p class="socoreDealer"><b>Puntaje del Dealer: </b><span id="scoreDealer">?</span></p>
             <div class="container-cards" id="containerCards">
             </div>
-            <div class="groupButton">
+            <div class="groupButton" id="buttonsGamePrincipal">
                <button id="getCarta">Otra carta</button>
-               <button>Stop</button>
+               <button id="getResult">Stop</button>
             </div>
-
+            <button id="buttonGameAgain">Volver a jugar</button>
          </div>
 
       </div>

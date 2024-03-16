@@ -81,45 +81,6 @@ function getRamdomCarta(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-//Función para obtener el número de fichas que tendrá disponible el jugador
-function getCantidadFichas() {
-  let cantidadFichasInput = 0;
-  alert(
-    "Antes de empezar a jugar, por favor ingrese el número de fichas que desea utilizar. Cada ficha representa el número de veces que jugará a 21."
-  );
-  while (cantidadFichasInput === 0 || isNaN(cantidadFichasInput)) {
-    cantidadFichasInput = Number(
-      prompt("Por favor, solo ingresar números enteros")
-    );
-    if (isNaN(cantidadFichasInput)) {
-      alert("Usuario mono, solo números enteros");
-      cantidadFichasInput = 0;
-    } else if (cantidadFichasInput <= 0) {
-      alert("Usuario mono, cantidad no válida");
-      cantidadFichasInput = 0;
-    }
-  }
-  return cantidadFichasInput;
-}
-
-//Función para guardar historial de un usuario
-function guardarHistorial() {
-  let nick = nickSesion;
-  let fecha = `${dia}/${mes}/${anio}`;
-  let puntajeJugador = totalJugador;
-  let puntajeComputadora = totalComputadora;
-  let resultadoPartida = resultadoPartidaUsuario;
-  let historialUsuario = {
-    nick: nick,
-    fecha: fecha,
-    puntajeJugador: puntajeJugador,
-    puntajeComputadora: puntajeComputadora,
-    resultadoPartida: resultadoPartida,
-  };
-
-  historial.push(historialUsuario);
-}
-
 /* Verificar campos llenos */
 function verificarCamposLlenos() {
   var inputs = document.querySelectorAll(
@@ -343,6 +304,7 @@ document.addEventListener("DOMContentLoaded", function () {
       mensajeError.style.display = "none";
       document.getElementById("fichasMenu").style.display = "none";
       document.getElementById("levelMenu").style.display = "flex";
+      updateFichasRests(cantidadFichas);
       renderDealers();
     } else {
       // Si el número no es válido, mostramos el mensaje de error
@@ -425,16 +387,22 @@ function renderDealers() {
     if (idSeleccionado) {
       if (cantidadFichas == 0) {
         alert("Te has quedado sin fichas");
+      } else {
+        document.getElementById("levelEmpty").style.display = "none";
+        document.getElementById("fichasMenu").style.display = "none";
+        document.getElementById("levelMenu").style.display = "none";
+        document.getElementById("tableGame").style.display = "flex";
+        cantidadFichas--;
+        playGame(idSeleccionado);
+        document
+          .getElementById("getCarta")
+          .addEventListener("click", getAnotherCard);
+        document
+          .getElementById("getResult")
+          .addEventListener("click", getMessageResult);
+        document.getElementById("buttonsGamePrincipal").style.display = "flex";
+        document.getElementById("buttonGameAgain").style.display = "none";
       }
-      document.getElementById("levelEmpty").style.display = "none";
-      document.getElementById("fichasMenu").style.display = "none";
-      document.getElementById("levelMenu").style.display = "none";
-      document.getElementById("tableGame").style.display = "flex";
-      cantidadFichas--;
-      playGame(idSeleccionado);
-      document
-        .getElementById("getCarta")
-        .addEventListener("click", getAnotherCard);
     } else {
       document.getElementById("levelEmpty").style.display = "block";
     }
@@ -488,6 +456,44 @@ function getAnotherCard() {
   totalJugador += seleccionarCarta();
   console.log(totalJugador);
   if (totalJugador >= 22) {
-    alert("Perdiste");
+    document.getElementById("messageMore21").style.display = "block";
   }
+}
+
+function updateFichasRests(cantidadFichas) {
+  var spanElement = document.getElementById("fichasRest");
+  spanElement.textContent = cantidadFichas;
+}
+
+function updateScoreDealer(totalComputadora) {
+  var spanElement = document.getElementById("scoreDealer");
+  spanElement.textContent = totalComputadora;
+}
+
+function getMessageResult() {
+  if (totalJugador === totalComputadora) {
+    document.getElementById("messageMore21").style.display = "none";
+    document.getElementById("messageLostVsDealer").style.display = "block";
+    document.getElementById("messageWin").style.display = "none";
+  } else if (totalJugador > totalComputadora) {
+    document.getElementById("messageMore21").style.display = "none";
+    document.getElementById("messageLostVsDealer").style.display = "none";
+    document.getElementById("messageWin").style.display = "block";
+  }
+  document.getElementById("buttonsGamePrincipal").style.display = "none";
+  let buttonAgain = document.getElementById("buttonGameAgain");
+  buttonAgain.style.display = "block";
+  buttonAgain.addEventListener("click", gameAgain);
+
+  updateScoreDealer(totalComputadora);
+}
+
+function gameAgain() {
+  cartasSeleccionadas = [];
+  totalComputadora = 0;
+  totalJugador = 0;
+  document.getElementById("levelMenu").style.display = "flex";
+  document.getElementById("tableGame").style.display = "none";
+  updateFichasRests(cantidadFichas);
+  renderDealers();
 }
