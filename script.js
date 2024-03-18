@@ -103,17 +103,16 @@ function onSubmitFormLogin(event) {
     let usuario = document.getElementById("userLogin").value
     let contraseña = document.getElementById("passwordLogin").value
     localStorage.removeItem("usuario")
+		localStorage.setItem("userSessiom", usuario)
 
     // Validar el usuario y la contraseña
     if (validarUsuarioYContraseña(usuario, contraseña)) {
       document.getElementById("pageInicial").style.display = "none"
       document.getElementById("pageStartGame").style.display = "flex"
       document.getElementById("fichasMenu").style.display = "flex"
-      localStorage.setItem("usuario", usuario)
-      document.getElementById("welcomeUser").textContent =
-        "¡Bienvenido a Blackjack, " + usuario + "!"
       document.getElementById("levelMenu").style.display = "none"
       document.getElementById("tableGame").style.display = "none"
+			getUserSession();
       cantidadFichas = 0
       updateFichasRests(cantidadFichas)
       document.getElementById("fichasMount").value = ""
@@ -124,6 +123,11 @@ function onSubmitFormLogin(event) {
     }
   }
 }
+function getUserSession() {
+	let userSession = localStorage.getItem("userSessiom")
+  document.getElementById("welcomeUser").textContent = "¡Bienvenido a Blackjack, " + userSession + "!"
+}
+
 // Agregar el evento submit al formulario
 document.addEventListener("DOMContentLoaded", function () {
   document
