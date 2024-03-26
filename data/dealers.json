@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nombre": "Juan García",
+    "level": "Amateur",
+    "wins": 2,
+    "defeats": 20,
+    "rutaImagen": "dealer_1.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Constantino Hernandez",
+    "level": "Veterano",
+    "wins": 35,
+    "defeats": 18,
+    "rutaImagen": "dealer_2.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "Lucinda Reyes",
+    "level": "Avanzado",
+    "wins": 60,
+    "defeats": 12,
+    "rutaImagen": "dealer_3.jpg"
+  }
+]

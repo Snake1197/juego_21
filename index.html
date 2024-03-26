@@ -12,18 +12,12 @@
       rel="stylesheet">
    <link rel="stylesheet" href="./styles.css">
    <script src="./script.js"></script>
+   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
 
 <body>
    <div class="login" id="pageInicial">
-      <div class="result-login-error" id="messageLoginError">
-         <p>No pudimos encontrar una cuenta que coincida con el nombre de usuario y la contraseña que ingresó. Por favor
-            verifique
-            su nombre de usuario y contraseña e inténtelo nuevamente.</p>
-      </div>
-      <div class="result-signin-success" id="messageSiginSuccess">
-         <p>El registro ha sido completado correctamente. Vuelva al login para iniciar sesión.</p>
-      </div>
       <div class="container">
          <div class="banner-login">
             <div class="container-name">
@@ -47,6 +41,15 @@
                         <span class="error-message">Este campo no puede estar vacío</span>
                      </div>
                      <button type="submit" id="buttonLogin">Iniciar sesión</button>
+                     <button type="submit" id="loadingIcon">
+                        <div class="container-balls">
+                           <div class="cargando">
+                              <div class="pelotas"></div>
+                              <div class="pelotas"></div>
+                              <div class="pelotas"></div>
+                           </div>
+                        </div>
+                     </button>
                      <p class="register-option">¿No tienes una cuenta? <a href="" id="optionSignin">Regístrate</a></p>
                   </form>
                </div>
@@ -143,6 +146,7 @@
 
       </div>
    </div>
+   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 
 </html>

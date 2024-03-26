@@ -110,26 +110,6 @@
   color: #e44a4a;
   display: none;
 }
-.result-login-error {
-  width: 100%;
-  position: fixed;
-  background-color: #d33737;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  font-size: 15px;
-  display: none;
-}
-.result-signin-success {
-  width: 100%;
-  position: fixed;
-  background-color: #45b658;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  font-size: 15px;
-  display: none;
-}
 #cardSignin {
   display: none;
 }
@@ -429,6 +409,52 @@
 #messageLostVsDealer,
 #messageWin,
 #buttonGameAgain,
-#messageFichasEmpty {
+#messageFichasEmpty,
+#loadingIcon {
   display: none;
+}
+
+#loadingIcon .container-balls{ 	
+	display: grid;
+    place-content: center;
+}
+#loadingIcon .cargando{
+    width: 60px;
+    height: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+	margin: 0 auto;
+   flex-direction: row;
+}
+#loadingIcon .texto-cargando{ 
+	padding-top:20px
+}
+#loadingIcon .cargando span{
+    font-size: 20px;
+    text-transform: uppercase;
+}
+#loadingIcon .pelotas {
+    width: 10px;
+    height: 10px;
+    background-color: #00b8de;
+    animation: salto .5s alternate
+    infinite;
+	border-radius: 50%	
+}
+#loadingIcon .pelotas:nth-child(2) {
+    animation-delay: .18s;
+}
+#loadingIcon .pelotas:nth-child(3) {
+    animation-delay: .37s;
+}
+@keyframes salto {
+    from {
+        transform: scaleX(1);
+    }
+    to{
+        transform: 
+        translateY(-15px) scaleX(1);
+    }
 }

@@ -86,43 +86,69 @@ function verificarCamposLlenos() {
 
 // Función para validar el inicio de sesión
 function validarUsuarioYContraseña(usuario, contraseña) {
-  for (let i = 0; i < usuarios.length; i++) {
-    if (usuarios[i].nick === usuario && usuarios[i].password === contraseña) {
-      return true
-    }
-  }
-  return false
+  return new Promise((resolve, reject) => {
+    // Simulación de una operación asíncrona (aquí se buscaría en la lista de usuarios)
+    setTimeout(() => {
+      for (let i = 0; i < usuarios.length; i++) {
+        if (usuarios[i].nick === usuario && usuarios[i].password === contraseña) {
+          resolve(true); // Usuario y contraseña válidos
+          return;
+        }
+      }
+      reject(false); // Usuario y/o contraseña inválidos
+    }, 1000); // Simular retardo de 1 segundo
+  });
 }
 
-// Función que se ejecuta cuando se intenta enviar el formulario
+// Función para manejar el envío del formulario
 function onSubmitFormLogin(event) {
   event.preventDefault()
+
+  // Obtener referencias al botón y al icono de carga
+  const button = document.getElementById("buttonLogin")
+  const loadingIcon = document.getElementById("loadingIcon")
+
+  // Ocultar el botón y mostrar el ícono de carga
+  button.style.display = "none"
+  loadingIcon.style.display = "inline-block"
+
   if (!verificarCamposLlenos()) {
-    return // Detener la ejecución si los campos están vacíos
+    // Detener la ejecución si los campos están vacíos
+    // Mostrar el botón y ocultar el ícono de carga
+    button.style.display = "inline-block"
+    loadingIcon.style.display = "none"
+    return;
   } else {
     let usuario = document.getElementById("userLogin").value
     let contraseña = document.getElementById("passwordLogin").value
     localStorage.removeItem("usuario")
-		localStorage.setItem("userSessiom", usuario)
+    localStorage.setItem("userSessiom", usuario)
 
     // Validar el usuario y la contraseña
-    if (validarUsuarioYContraseña(usuario, contraseña)) {
-      document.getElementById("pageInicial").style.display = "none"
-      document.getElementById("pageStartGame").style.display = "flex"
-      document.getElementById("fichasMenu").style.display = "flex"
-      document.getElementById("levelMenu").style.display = "none"
-      document.getElementById("tableGame").style.display = "none"
-			getUserSession();
-      cantidadFichas = 0
-      updateFichasRests(cantidadFichas)
-      document.getElementById("fichasMount").value = ""
-    } else {
-      // Acción en caso de usuario y contraseña inválidos
-      messageLoginError.style.display = "block"
-      document.getElementById("formLogin").reset()
-    }
+    validarUsuarioYContraseña(usuario, contraseña)
+      .then((valido) => {
+          // Inicio de sesión exitoso
+          document.getElementById("pageInicial").style.display = "none"
+          document.getElementById("pageStartGame").style.display = "flex"
+          document.getElementById("fichasMenu").style.display = "flex"
+          document.getElementById("levelMenu").style.display = "none"
+          document.getElementById("tableGame").style.display = "none"
+          getUserSession();
+          cantidadFichas = 0;
+          updateFichasRests(cantidadFichas);
+          document.getElementById("fichasMount").value = ""
+      })
+      .catch((error) => {
+         loginError();
+         document.getElementById("formLogin").reset()
+      })
+      .finally(() => {
+        button.style.display = "inline-block";
+        loadingIcon.style.display = "none";
+      });
   }
 }
+
 function getUserSession() {
 	let userSession = localStorage.getItem("userSessiom")
   document.getElementById("welcomeUser").textContent = "¡Bienvenido a Blackjack, " + userSession + "!"
@@ -234,15 +260,12 @@ function onSubmitFormSignin(event) {
     usuarios.push(nuevoUsuario)
 
     // Limpiar el formulario después del registro
-
-    document.getElementById("messageSiginSuccess").style.display = "block"
+    registerSuccess()
     document.getElementById("formSignin").reset()
     document.getElementById("userNoUnique").style.display = "none"
     localStorage.removeItem("usuario")
     document.getElementById("formLogin").reset()
   }
-
-  // Validar si el nick ya está en uso
 }
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("getCarta").addEventListener("click", function () {
@@ -259,7 +282,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("cardSignin").style.display = "flex"
     document.getElementById("cardLogin").style.display = "none"
     document.getElementById("formSignin").reset()
-    messageLoginError.style.display = "none"
   })
 })
 
@@ -273,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("cardSignin").style.display = "none"
     document.getElementById("cardLogin").style.display = "flex"
     document.getElementById("formSignin").reset()
-    messageSiginSuccess.style.display = "none"
   })
 })
 
@@ -304,79 +325,74 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("fichasMenu").style.display = "none"
       document.getElementById("levelMenu").style.display = "flex"
       updateFichasRests(cantidadFichas)
-      renderDealers()
+      getDealers()
+  .then(dealers => {
+    // Llamar a renderDealers con los datos de los dealers
+    renderDealers(dealers);
+  })
+  .catch(error => {
+    console.error('Error fetching dealers data:', error);
+  });
     } else {
       // Si el número no es válido, mostramos el mensaje de error
       mensajeError.style.display = "block"
     }
   })
 })
-
+// Función para obtener los dealers
 function getDealers() {
-  return [
-    {
-      id: 1,
-      nombre: "Juan García",
-      level: "Amateur",
-      wins: 2,
-      defeats: 20,
-      rutaImagen: "dealer_1.jpg",
-    },
-    {
-      id: 2,
-      nombre: "Constantino Hernandez",
-      level: "Veterano",
-      wins: 35,
-      defeats: 18,
-      rutaImagen: "dealer_2.jpg",
-    },
-    {
-      id: 3,
-      nombre: "Lucinda Reyes",
-      level: "Avanzado",
-      wins: 60,
-      defeats: 12,
-      rutaImagen: "dealer_3.jpg",
-    },
-  ]
+  return fetch('data/dealers.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
 }
 
-let dealers = getDealers()
 
-function renderDealers() {
-  const contenedor = document.getElementById("containerCardDealers")
-  contenedor.innerHTML = ""
+function renderDealers(dealers) {
 
-  dealers.forEach((dealer) => {
-    const cardDealer = createDealerCard(dealer)
-    contenedor.appendChild(cardDealer)
-  })
+  const contenedor = document.getElementById("containerCardDealers");
+  contenedor.innerHTML = "";
+
+  dealers.forEach(dealer => {
+    const cardDealer = createDealerCard(dealer);
+    contenedor.appendChild(cardDealer);
+  });
 
   contenedor.addEventListener("click", function (event) {
-    const cardDealer = event.target.closest(".card-dealer")
+    const cardDealer = event.target.closest(".card-dealer");
     if (cardDealer) {
-      const idSeleccionado = cardDealer.id
-      handleDealerSelection(idSeleccionado)
+      const idSeleccionado = cardDealer.id;
+      handleDealerSelection(idSeleccionado);
     }
-  })
+  });
 
-  const guardarBoton = document.getElementById("getLevel")
+  const guardarBoton = document.getElementById("getLevel");
   guardarBoton.addEventListener("click", function () {
     const idSeleccionado = contenedor.querySelector(
       ".card-dealer-selected"
-    )?.id
+    )?.id;
     if (idSeleccionado) {
-      handleLevelSelection(idSeleccionado)
-      document.getElementById("messageMore21").style.display = "none"
-      document.getElementById("messageLostVsDealer").style.display = "none"
-      document.getElementById("messageWin").style.display = "none"
-      updateScoreDealer("?")
-      cantidadFichas--
+      handleLevelSelection(idSeleccionado);
+      document.getElementById("messageMore21").style.display = "none";
+      document.getElementById("messageLostVsDealer").style.display = "none";
+      document.getElementById("messageWin").style.display = "none";
+      updateScoreDealer("?");
+      cantidadFichas--;
     } else {
-      document.getElementById("levelEmpty").style.display = "block"
+      document.getElementById("levelEmpty").style.display = "block";
     }
-  })
+  });
 }
+
 
 function createDealerCard(dealer) {
   const { id, nombre, level, wins, defeats, rutaImagen } = dealer
@@ -516,4 +532,28 @@ function gameAgain() {
   document.getElementById("buttonStartGame").style.display = "flex"
   document.getElementById("messageFichasEmpty").style.display = "none"
   updateFichasRests(cantidadFichas)
+}
+
+
+//Uso de librerías
+function loginError(){
+Toastify({
+  text: "Usuario y/o contraseña inválidos.",
+  className: "warning",
+  close: true,
+  style: {
+    backgroundImage: 'linear-gradient(181deg, rgba(211, 55, 55, 0.97) 10%, rgba(117, 5, 5, 0.88) 90%)',
+  } 
+}).showToast();
+}
+
+function registerSuccess(){
+Toastify({
+  text: "Registro exitoso! Vuelva al login.",
+  className: "warning",
+  close: true,
+  style: {
+   backgroundImage: 'linear-gradient(181deg, rgba(14, 128, 12, 0.97) 10%, rgba(65, 176, 69, 0.88) 90%)',
+  } 
+}).showToast();
 }
